@@ -1,11 +1,12 @@
 ---
 title: "Finite Differences"
-jupyter: pg
+jupyter: pgdev
 ---
 
-Assume the general Poisson equation $$-\div(a\grad u)=f$$
 
-with some conductivity $a$, a source term $f$ and the potential $u$.
+
+
+Assume the general Poisson equation $$-\div(a\grad u)=f$$ with some conductivity $a$, a source term $f$ and the potential $u$.
 This can be an electric potential with $a=\sigma$, the hydraulic head with hydraulic conductivity $k$, the temperature with the thermal conductivity or the gravity potential with $a=1$.
 Note that we are using the form with the leading minus.
 First, $-\grad u$ is typically the field (e.g. electric) and $a\grad u$ is usually the flow (e.g. streaming velocity or current density) towards decreasing potential.
@@ -16,25 +17,25 @@ Neglecting $a$ for a moment, the left-hand side is the second derivative, i.e. a
 
 ## FD Approximation
 
-:::{.callout-tip icon="false" title="Approximate derivative operators by differences"} 
+:::{.callout-tip icon="false" title="Approximate derivative operators by differences"}
 $$ \pdv{u}{x}\approx\frac{\Delta u}{\Delta x} $$
 :::
 and solution $u$ by finite values $u_i$ at points $x_i$, e.g.
 $$ \dv*{u}{x}_{2.5} := (u_3-u_2) / (x_3-x_2) $$
 
 <!-- $$ \dv*[2]{u}{x}_{3} :=   -->
-$$\pdv[2]{u_3}{x}\approx 
-\frac{\dv*{u}{x}_{3.5}-\dv*{u}{x}_{2.5}}{(x_4-x_2)/2} 
+$$\pdv[2]{u_3}{x}\approx
+\frac{\dv*{u}{x}_{3.5}-\dv*{u}{x}_{2.5}}{(x_4-x_2)/2}
 = \frac{(u_4-u_3)/(x_4-x_3)-(u_3-u_2)/(x_3-x_2)}{(x_4-x_2)/2} $$
 
-### Difference stencil 
+### Difference stencil
 Assumption: equidistant discretization $\Delta x$, conductivity 1
 
 1st derivative: $[-1, +1] / dx$, 2nd derivative $[+1, -2, +1] / dx^2$
 
 Matrix-Vector product $\vb{A}\cdot\vb{u}=\vb{f}$ with
 
-$$ \vb{A} = \frac{1}{\Delta x} \begin{bmatrix}   
+$$ \vb{A} = \frac{1}{\Delta x} \begin{bmatrix}
 -1 & +2 & -1 & 0 & \ldots & &  \\
 0 & -1 & +2 & -1 & 0 & \ldots & \\
 \vdots & \vdots & \vdots & \ddots & \vdots &  \\
@@ -43,7 +44,7 @@ $$ \vb{A} = \frac{1}{\Delta x} \begin{bmatrix}
 
 This is illustrated by the Finite Difference stencil (@fig-1dfd-stencil): Every point, e.g. the red point, is constructed by using its neighbors.
 
-![1D Finite-Difference stencil](pics/fd1dstencil.svg){#fig-1dfd-stencil}
+![1D Finite-Difference stencil](pics/fd/fd1dstencil.svg){#fig-1dfd-stencil}
 
 ## FDM on the general Poisson equation
 Assume the Poisson equation $$\div(a\grad u)=f$$ with a conductivity term $a$
@@ -66,12 +67,12 @@ fixes the potential to a specific value $u_B$.
 #### Implementation 1 : explicit
 (@eq-Dirichlet) can be directly added as an equation in the matrix and the right-hand-side:
 
-$$ \begin{bmatrix}   
+$$ \begin{bmatrix}
 +1 & 0 & 0 & \ldots & &  \\
 -1 & +2 & -1 & 0 & \ldots & \\
 \vdots & \vdots & \ddots & \vdots &  \\
 \ldots & \ldots & 0 & -1 & +2 & -1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} u_B\\ f_1 \\ \vdots \\ f_N \end{bmatrix}  $$
 
 #### Implementation 2: Node removal
@@ -79,19 +80,19 @@ The Dirichlet condition (@eq-Dirichlet) is directly inserted into the second equ
 $-u_B + 2 u_1 - u_2 = f_1$
 and the first equation is omitted
 
-$$ \begin{bmatrix}   
+$$ \begin{bmatrix}
 +2 & -1 & 0 & \ldots & &  \\
 -1 & +2 & -1 & 0 & \ldots & \\
 \vdots & \vdots & \ddots & \vdots &  \\
 \ldots & 0 & -1 & +2 & -1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} f_1 + u_B\\ f_2 \\ \vdots \\ f_N \end{bmatrix} $$
 
 Consequently, the first column is removed and the first equation is the sum of the preceding two other equations.
 
-### Neumann BC 
+### Neumann BC
 The Neumann boundary condition
-$$ u_1 - u_0 = g_B$${#eq-Neumann} 
+$$ u_1 - u_0 = g_B$${#eq-Neumann}
 fixes the gradient of the potential at the left end.
 
 #### Implementation 1: explicit
@@ -101,31 +102,31 @@ $$ \begin{bmatrix}
 -1 & +2 & -1 & 0 & \ldots & \\
 \vdots & \vdots & \vdots & \ddots & \vdots \\
 \ldots & \ldots & -1 & +2 & -1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} g_B\\ f_1 \\ \vdots \\ f_N \end{bmatrix}  $$
 Note that this would result in an unsymmetric matrix for the left boundary, but in a symmetric matrix for the right boundary. Therefore we better use the outward normal direction
-$$ u_0 - u_1 = g_B$${#eq-Neumann-Outward} 
+$$ u_0 - u_1 = g_B$${#eq-Neumann-Outward}
 leading to the symmetric matrix
 $$ \begin{bmatrix}
 +1 & -1 & 0 & \ldots & &  \\
 -1 & +2 & -1 & 0 & \ldots & \\
 \vdots & \vdots & \vdots & \ddots & \vdots \\
 \ldots & \ldots & -1 & +2 & -1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} g_B\\ f_1 \\ \vdots \\ f_N \end{bmatrix}  $$
 
 ### Implementation 2: node removal
 The equation (@eq-Neumann-Outward) is directly inserted into the second equation
 $$-u_0 +2 u_1-u_2 = f_1$$
 This leads to
-$$u_2-u_1=f_1+g_B $$ 
+$$u_2-u_1=f_1+g_B $$
 and thus to the matrix
-$$ \begin{bmatrix}   
+$$ \begin{bmatrix}
 +1 & -1 & 0 & \ldots & &  \\
 -1 & +2 & -1 & 0 & \ldots & \\
 \vdots & \vdots & \ddots & \vdots &  \\
 \ldots & 0 & -1 & +2 & -1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} f_1 + g_B\\ f_2 \\ \vdots \\ f_N \end{bmatrix} $$
 
 ## The general case
@@ -160,13 +161,13 @@ $$ A_{i,i-1} = C_i^{left} = a_{i-1} / (x_{i}-x_{i-1}) / (x_{i+1}-x_{i-1}) \cdot 
 
 $$ A_{i,i+1} = C_i^{right} = a_i / (x_{i+1}-x_{i}) / (x_{i+1}-x_{i-1}) \cdot 2 $$
 
-$$ \begin{bmatrix}   
+$$ \begin{bmatrix}
 +1 & 0 & 0 & \ldots & &  \\
 C_1^L & -(C_1^L+C_1^R) & C_1^R & 0 & \ldots & \\
 \vdots & \vdots & \ddots & \vdots &  \\
 \ldots & \ldots & 0 & C_N^L & -(C_N^L+C_N^R) & C_N^R \\
 \ldots & \ldots & & 0 & -1 & +1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} u_B\\ f_1 \\ \vdots \\ f_N \\ g_B \Delta x_N \end{bmatrix}  $$
 
 ### Symmetry
@@ -185,18 +186,18 @@ $\Rightarrow$ inaccuracies expected for non-equidistant discretization
 
 ### A closer look at the Dirichlet boundary
 
-$$ \begin{bmatrix}   
+$$ \begin{bmatrix}
 +1 & 0 & 0 & \ldots & &  \\
-C_1^L & -(C_1^L+C_1^R) & C_1^R & 0 & \ldots & 
+C_1^L & -(C_1^L+C_1^R) & C_1^R & 0 & \ldots &
 \end{bmatrix} \begin{bmatrix} u_B\\ f_1  \end{bmatrix}$$
 
 1. $C$ can be differently scaled from 1 $\Rightarrow$ multiply with $C_i^L$
-1. Matrix is non-symmetric 
+1. Matrix is non-symmetric
 <!-- $\Rightarrow$ add $C_1^L$ -->
 
-$$ \begin{bmatrix}   
+$$ \begin{bmatrix}
 C_1^L & 0 & 0 & \ldots & &  \\
-C_1^L & -(C_1^L+C_1^R) & C_1^R & 0 & \ldots & 
+C_1^L & -(C_1^L+C_1^R) & C_1^R & 0 & \ldots &
 \end{bmatrix} \begin{bmatrix} u_B C_i^L\\ f_1  \end{bmatrix} $$
 
 ### A closer look at the Neumann boundary
@@ -204,7 +205,7 @@ C_1^L & -(C_1^L+C_1^R) & C_1^R & 0 & \ldots &
 $$ \begin{bmatrix}
 \ldots & \ldots & 0 & C_N^L & -(C_N^L+C_N^R) & C_N^R \\
 \ldots & \ldots & & 0 & -1 & +1
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} f_N \\ g_B \Delta x_N \end{bmatrix}  $$
 
 1. $C$ can be differently scaled from 1 $\Rightarrow$ multiply with $C_N^R$
@@ -213,7 +214,7 @@ $$ \begin{bmatrix}
 $$ \begin{bmatrix}
 \ldots & \ldots & 0 & C_N^L & -(C_N^L+C_N^R) & C_N^R \\
 \ldots & \ldots & & 0 & C_N^R & -C_N^R
-\end{bmatrix} \cdot\vb{u} = 
+\end{bmatrix} \cdot\vb{u} =
 \begin{bmatrix} f_N \\ -g_B \Delta x_N C_N^R \end{bmatrix}  $$
 
 ### Accuracy
@@ -232,11 +233,11 @@ $$u(x) =  C_0 + C_1 x -1/2 x^2 $${#eq-analytic}
 
 Depending on the combination of boundary conditions, the integration leads to the following solutions for the integration constants
 
-Left BC   | Right BC  | $C_0$                 | $C_1$                
+Left BC   | Right BC  | $C_0$                 | $C_1$
 ----------|-----------|-----------------------|-------------------------
-Dirichlet | Dirichlet | $u_L$                 | $L/2 + (u_R-u_L)/ L$ 
-Dirichlet | Neumann   | $u_L$                 | $g_R + L$     
-Neumann   | Dirichlet | $u_R - g_L L + L^2/2$ | $g_L$                
+Dirichlet | Dirichlet | $u_L$                 | $L/2 + (u_R-u_L)/ L$
+Dirichlet | Neumann   | $u_L$                 | $g_R + L$
+Neumann   | Dirichlet | $u_R - g_L L + L^2/2$ | $g_L$
 
 with $L=(x_N-x_0)$
 
@@ -254,9 +255,9 @@ In case of equidistant discretization and homogeneous conductivity
 1. continuous (homogeneous) sources lead to parabolic potential
 1. coarse discretization of the latter underestimates the variations
 
-Furthermore, 
+Furthermore,
 1. a gradient in the conductivity acts like a source
-1. changes in 
+1. changes in
 
 ### Next spatial dimension
 
@@ -265,13 +266,13 @@ Furthermore,
 If we go from 1D to 2D conditions, we have conductivities between each four nodes (@fig-2dfd-stencil).
 The red point is constructed by its four neighbors to the left and right, and to the top and bottom.
 
-![Simple 2D conductivity grid with FD stencil](notebooks/grid32sigmaStencil.svg){#fig-2dfd-stencil}
+![Simple 2D conductivity grid with FD stencil](pics/fd/grid32sigmaStencil.svg){#fig-2dfd-stencil}
 
 For introducing the conductivity into the coupling coefficient, there are always two values adjacent to the connecting edge.
 
 $$ C_{i,j}^{right} = a_{i,j-1/2} / (x_{i+1}-x_{i})^2 $$
 
-$a_{i,j-1/2}=(a_{i,j-1}+a_{i,j})/2$ ? 
+$a_{i,j-1/2}=(a_{i,j-1}+a_{i,j})/2$ ?
 
 harmonic, geometric? weighting?
 
@@ -341,7 +342,7 @@ $$ Z \pdv{\theta}{t} = a \theta \pdv[2]{Z}{z} $$
 
 $$ \frac1\theta \pdv{\theta}{t} = C = a \frac{1}{Z}\pdv[2]{Z}{z} $$
 
-### Solution 
+### Solution
 
 regarding the BC $e^{\imath\omega t}$ leads to $C=\imath\omega$ and thus $\theta=\theta_0 e^{\imath\omega t}$
 
@@ -349,7 +350,7 @@ $$ \pdv[2]{Z}{z} - \imath \frac{\omega}{a} Z = \pdv[2]{Z}{z} + n^2 Z = 0  $$
 
 Helmholtz equation with solution $Z=Z_0 e^{\imath n z}$ ($n^2=\imath\omega/a$)
 
-$$ Z=Z_0 e^{\imath n z} = Z_0 e^{\sqrt{\imath\omega/a}z} = 
+$$ Z=Z_0 e^{\imath n z} = Z_0 e^{\sqrt{\imath\omega/a}z} =
 Z_0 e^{\sqrt{\omega/2a}(1+\imath)z} $$
 
 $$ T(t, z)/\Delta T + T_0 = Z(z)\theta(t)=
@@ -415,36 +416,36 @@ ax.grid()
 
 $$ \pdv{T}{t} - a \pdv[2]{T}{z} = 0 $$
 
-Solve Poisson equation $\div(a\grad u)=f$ 
+Solve Poisson equation $\div(a\grad u)=f$
 
 for every time step $i$ (using FDM, FEM, FVM etc.)
 
-Finite-difference step in time: update field by 
+Finite-difference step in time: update field by
 $$ T_{i+1} = T_i + a \pdv[2]{u}{z} \cdot \Delta t$$
 
-![Forward difference stencil](pics/dtforward.svg)
+![Forward difference stencil](pics/fd/dtforward.svg)
 
 ### Implicit (Euler) method
 
 $$ \pdv{T}{t}^n \approx \frac{T^{n+1}-T^n}{\Delta t} = a \pdv[2]{T}{z} ^{n+1} $$
 
-![Forward difference stencil](pics/dtbackward.svg)
+![Forward difference stencil](pics/fd/dtbackward.svg)
 
 ### Mixed - Crank-Nicholson method
 
 $$ \pdv{T}{t}^n \approx \frac{T^{n+1}-T^n}{\Delta t} = \frac12 a \pdv[2]{T}{z} ^n + \frac12 a \pdv[2]{T}{z} ^{n+1} $$
 
-![Mixed (balanced) difference stencil](pics/dtmixed.svg)
+![Mixed (balanced) difference stencil](pics/fd/dtmixed.svg)
 
-## Hyberbolic equations 
+## Hyberbolic equations
 
 Acoustic wave equation in 1D
-$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$ 
+$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
 
 $u$..pressure/velocity/displacement, $c$..velocity
 
 Damped (mixed parabolic-hyperbolic) wave equation
-$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$ 
+$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
 
 ### Discretization
 
@@ -458,9 +459,9 @@ $$ u^{n+1} = c^2 \Delta t^2 \pdv[2]{u}{x}^{n} + 2 u^n - u^{n-1} $$
 
 <!-- \frac{1}{\Delta t}  -->
 
-$$ \vb M \vb u^{n+1} = (\vb A + 2\vb M) \vb u^n - \vb M \vb u^{n-1} $$ 
+$$ \vb u^{n+1} = (\frac{1}{\Delta t}\vb A + 2\vb I) \vb u^n - \vb u^{n-1} $$
 
-![Second derivative](pics/dtsecond.svg)
+![Second derivative](pics/fd/dtsecond.svg)
 
 ### Example: velocity distribution
 
@@ -472,7 +473,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 x=np.arange(0, 600.01, 0.5)
 c = 1.0*np.ones_like(x) # velocity in m/s
-c[100:300] = 1 + np.arange(0,0.5,0.0025) 
+c[100:300] = 1 + np.arange(0,0.5,0.0025)
 c[900:1100] = 0.5  # low velocity zone
 
 # Plot velocity distribution.
@@ -493,7 +494,7 @@ Derivative of Gaussian (Ricker wavelet)
 l=5.0
 
 # Initial displacement field [m].
-u=(x-300.0)*np.exp(-(x-300.0)**2/l**2) 
+u=(x-300.0)*np.exp(-(x-300.0)**2/l**2)
 # Plot initial displacement field.
 plt.plot(x,u,'k')
 plt.xlabel('x [m]')
@@ -515,15 +516,15 @@ dx = np.diff(x)
 for i in range(100):
     dudx = np.diff(u)/dx
     ddu[1:-1] = np.diff(dudx)/dx[:-1]
-    u_next = 2*u-u_last+ddu*c**2 * dt**2 
+    u_next = 2*u-u_last+ddu*c**2 * dt**2
     u_last = u
     u = u_next
-  
+
 plt.plot(x,u,'k')
 ```
 
 <video autoplay="true" loop="true">
-<source src="notebooks/wave.mp4"> 
+<source src="pics/wave.mp4">
 </video>
 <!-- <video data-autoplay src="notebooks/wave.mp4"></video> -->
 <!-- {{< video notebooks/wave.mp4 video="true">}} -->

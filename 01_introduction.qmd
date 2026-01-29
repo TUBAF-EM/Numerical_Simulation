@@ -3,23 +3,41 @@ title: "Introduction"
 jupyter: pg
 ---
 
-<!-- 
-jupyter:
-  kernelspec:
-    display_name: Python 3
-    language: python
-    name: pg 
--->
+## Content
+In Geophysics, we are measuring a lot of different fields and try to use this for getting insight into the subsurface by using our knowledge of the physics.
+Numeric solutions are key to understanding the nature of the physical equations and to predict measurements. In the inverse problem, the solution of the forward problem, i.e. to predict synthetic data from a given parameter distribution, is the most important task and therefore also for the data analysis in geophysics.
 
-<!-- ## Content  -->
+## Literature
+
+There are hardly any textbooks covering numerical simulation methods in geophysical applications. Mostly, they are focused on the specific modelling purpose like electrodynamics (Haber), seismic wave modelling (Igel) geodynamics (Morra).
+Numerical recipes have been around for Fortran and C/C++, but higher-level programming languages are easier to use in academics.
+Besides the proprietary Matlab, Python has become the most widespread programming language in academia and research, which is why we use this here.
+
+* Morra (2018): Pythonic Geodynamics - Implementations for fast computing, [frei verfügbar](https://doi.org/10.1007/978-3-319-55682-6), Dive into Python programming
+* Warnick: Numerical Methods for Engineering : [An Introduction Using MATLAB® and Computational Electromagnetics Examples](https://ebookcentral.proquest.com/lib/freiberg-ebooks/detail.action?docID=6468440)
+* Igel (2007): [Numerical modelling in geophysics](https://www.geophysik.uni-muenchen.de/~igel/downloads/), [short course](https://www.geophysik.uni-muenchen.de/~igel/nmg-short/)
+* Logg et al. (2011): Automated Solution of Differential Equations by the Finite Element Method: [Link](http://launchpad.net/fenics-book/trunk/final/+download/fenics-book-2011-10-27-final.pdf)
+* Press (2007): [Numerical recipes: the art of scientific computing](https://numerical.recipes/book.html)
+* Haber (2015): Computational methods geophysical electromagnetics
+
+### Online references
+
+
+
+* [pyGIMLi](https://pygimli.org): Python Geophysical Inversion and Modelling Library - the general-purpose library that we will make use here
+* [Homepage of Oskar](https://www.base-fn.de/oscar/) package - finite element package based upon pyGIMLi with brilliant tutorials and examples
+* [Geoscience.XYZ](https://geosci.xyz) - geoscience instruction material including the SimPEG code
+* [Fenics handbook](https://fenicsproject.org/documentation/) - a general-purpose FE library
+* [Theory of electromagnetics](https://ruboerner.github.io/ThEM/) - background of EM
+
 
 
 ## Differential operators
 
-The physical fields are governed by partial differential equations with differential operators in space and time
-There are single derivative in space $\pdv{x}$ or time $\pdv{t}$.
+The physical fields are mostly governed by partial differential equations with differential operators in space and time.
+There are single derivatives in space $\pdv{x}$ or time $\pdv{t}$.
 All derivatives into all spatial dimensions are subsumed in the *nabla* operator $\grad=(\pdv x, \pdv y, \pdv z)^T$.
-The (negative) gradient of a potential is the corresponding vector field with directions perpendicular to the isosurfaces into the direction of decreasing potential. 
+The (negative) gradient of a potential is the corresponding vector field with directions perpendicular to the isosurfaces into the direction of decreasing potential.
 
 
 The divergence applies the nabla operator to a vectorial field by the dot product:
@@ -29,13 +47,13 @@ The *divergence* of a field describes the source strength using Gauss' law.
 ::::: {.fragment}
 :::: {.columns}
 ::: {.column width="70%"}
-Gauss' law: 
+Gauss' law:
 
 *what's in (volume) comes out (surface)*
 $$\int_V \div\vb F\ dV = \iint_S \vb F \vdot \vb n\ dS$$
 :::
 ::: {.column width="25%"}
-![Gauss's theorem in EM](pics/Divergence_theorem_in_EM.svg)
+![Gauss's theorem in EM](pics/Divergence_theorem.svg)
 :::
 ::::
 :::::
@@ -44,7 +62,6 @@ The *curl* (rotation) operator occurs particularly in electromagnetic problems, 
 It is described by the cross-product between nabla operator and the field
 $$\curl \vb F = (\pdv{F_z}{y}-\pdv{F_y}{z}, \pdv{F_x}{z}-\pdv{F_z}{x}, \pdv{F_y}{x}-\pdv{F_x}{y})^T$$
 
-::::: {.fragment}
 :::: {.columns}
 ::: {.column width="70%"}
 Stokes law:
@@ -53,10 +70,9 @@ Stokes law:
 $$\int_S \curl \vb F \vdot \vb dS = \iint_S \vb F \vdot \vb dl$$
 :::
 ::: {.column width="25%"}
-![Stokes' theorem in EM](pics/Curl_theorem_in_EM.svg)
+![Stokes' theorem in EM](pics/Curl_theorem.svg)
 :::
 ::::
-:::::
 
 There are two laws concerning curl fields:
 
@@ -65,32 +81,43 @@ There are two laws concerning curl fields:
 
 ## Partial differential equations (PDEs)
 
-fdgdfhrfgh
-
 Mostly: solution of partial differential equations (PDEs) for either scalar (potentials) or vectorial (fields) quantities.
 
-### PDE Types 
+### Types of partial differential equations
 
-($u$-function, $f$-source, $a$/$c$-parameter):
- 
-* elliptic (potential) PDE of Poisson type $$-\nabla^2 u=f$$ or Helmholtz type $$\nabla^2 u + k^2 u = f$$
-* parabolic (diffusion) PDE $$-\nabla^2 u + a \pdv{u}{t} \frac{\partial u}{\partial t}=f$$
-* hyperbolic (wave) PDE $$-\nabla^2 u + c^2 \frac{\partial^2 u}{\partial t^2}=f$$
-<!-- (plus diffusive term) -->
-<!-- $$\frac{\partial^2\ u}{{\partial x}^2} - c^2\frac{\partial^2 u}{\partial t^2} = 0$$ -->
+Let $u$ denote the searched function, $f$ the source (force) and $a$/$c$ are material parameters.
+Depending on the occurring derivatives, we distinguish three main
+
+* **elliptic** (potentials) PDE of Poisson type
+$$-\nabla^2 u=f$$
+or Helmholtz type
+$$\nabla^2 u + k^2 u = f$$
+* **parabolic** (diffusion processes) PDE
+$$-\nabla^2 u + a \pdv{u}{t} \frac{\partial u}{\partial t}=f$$
+* **hyperbolic** (wave propagation) PDE
+$$-\nabla^2 u + c^2 \frac{\partial^2 u}{\partial t^2}=f$$,
+which can also have a diffusive term
+$$\frac{\partial^2\ u}{{\partial x}^2} - c^2\frac{\partial^2 u}{\partial t^2} = 0$$
+
+There are also other types:
+
 * coupled $\nabla\cdot u=f$ & $u = K \nabla p=0$ (Darcy flow)
 * nonlinear $(\nabla u)^2=s^2$ (Eikonal equation)
 
 ### Poisson equation
-potential field $u$ generates field $\vec{F}=-\nabla u$
 
-causes some flow $\vec{j}=a \vec{F}$ 
+![](pics/gravityPotential.png)
 
-$a$ is some sort of conductivity (electric, hydraulic, thermal)
+A potential field $u$ generates a vector field $\vb F=-\nabla u$ along its gradient, which in turn can cause some flow $\vb j=a \vb F$, where $a$ is some sort of conductivity (electric, hydraulic, thermal).
+Part of the flow is generated (injected) by our source, denoted as $\vb j_s$.
 
-continuity of flow: divergence of total current $\vb j + \vb j_s$ is zero
+The continuity of flow states that the divergence of total current $\vb j + \vb j_s$ vanishes, i.e., taking Gauss' law into account, in an arbitrary volume the sum of the currents flowing into (its normal vector) is zero:
 
-$$ \div (a \nabla u) = - \div \vb j_s $$
+$$ -\div (a \nabla u) = \div \vb j_s $$
+
+The operator on the left-hand side is called Laplace operator, a (negative) second derivative, i.e. the first derivative of the conductivity-weighted potential gradient.
+Discarding $a$ for a moment, a increasing first derivative is a positive curvature, typically a minimum of a curve.
+Since we have a negative second derivative, we have a negative curvature, typically a maximum, at in the vicinity of a source (the right-hand side), where current flows into the system.
 
 ### The heat equation in 1D
 
@@ -138,10 +165,10 @@ $$ \pdv{\vb u}{t} +(\vb u \vdot \grad) \vb u = \nu \nabla^2 \vb u - 1/\rho \grad
 ## Electromagnetics
 ### Maxwell's equations
 
-* Faraday's law: currents & varying electric fields $\Rightarrow$ magnetic field 
-$$ \curl \vb H = \pdv{\vb D}{t} + \vb j $$ 
+* Faraday's law: currents & varying electric fields $\Rightarrow$ magnetic field
+$$ \curl \vb H = \pdv{\vb D}{t} + \vb j $$
 * Ampere's law: time-varying magnetic fields induce electric field
-$$ \curl\vb E = -\pdv{\vb B}{t}$$ 
+$$ \curl\vb E = -\pdv{\vb B}{t}$$
 * $\div\vb D = \varrho$ (charge $\Rightarrow$), $\div\vb B = 0$ (no magnetic charge)
 * material laws $\vb D = \epsilon \vb E$ and $\vec B = \mu \vb H$
 
@@ -175,18 +202,30 @@ Describes first-arrival times $t$ as a function of velocity ($v$) or slowness ($
 
 $$ |\grad t| = s = 1/v $$
 
-![](pics/tt4.png){.fragment width="458" height="420"}
 
-## Hyberbolic equations 
+::: {.columns}
+::: {.column}
+![](pics/tt/tt0.png)
+
+![](pics/tt/tt2.png)
+:::
+::: {.column}
+![](pics/tt/tt1.png)
+
+![](pics/tt/tt3.png)
+:::
+:::
+
+Finally, we have the traveltimes at all nodes, including the ray paths in the individual cells.
+
+![](pics/tt/tt4.png)
+
+## Hyberbolic equations
 
 Acoustic wave equation in 1D
-$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$ 
+$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
 
 $u$..pressure/velocity/displacement, $c$..velocity
 
 Damped (mixed parabolic-hyperbolic) wave equation
-$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$ 
-
-```{python}
-import pygimli
-```
+$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$

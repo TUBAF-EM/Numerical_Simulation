@@ -9,7 +9,7 @@ jupyter: python3
 * [1956] Turner, Clough, Martin, Topp: Stiffness
 * [1960] Clough: Finite Elements for static elasticity
 * [1970-80] extension to structural, thermic and fluid dynamics
-* [1990] computational improvements 
+* [1990] computational improvements
 * now main method for almost all PDE types
 
 Geophysics: Poisson equation in 1970s, revival in 1990s and predominant in 2000s up to now
@@ -63,16 +63,37 @@ $$ \int_\Omega a \grad v_i \grad v_j \dd\Omega - \int_\Gamma a w \grad v_j \dd\G
 * divide subsurface in sub-volumes $\Omega_i$ with constant $a_i$ and $\grad v_j$
 :::
 
-## Hat functions 
+## Hat functions
 
-![](pics/shapefunctions1d.svg){width="100%"}
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.array([0, 1., 2.1, 3.5, 5.0])
+fig, ax = plt.subplots(figsize=(8, 4), nrows=2, sharex=True)
+for i in range(len(x)):
+    si = np.zeros_like(x)
+    si[i] = 1
+    ax[0].plot(x, si)
+    dsdx = np.diff(si)/np.diff(x)
+    ax[1].stairs(dsdx, x, ls="--", zorder=10, label=f"i={i}")
+
+ax[0].set_xticks(x)
+ax[0].set_yticks([0, 1])
+ax[1].set_yticks([-1, 0, 1])
+ax[0].grid()
+ax[1].grid()
+ax[1].legend()
+ax[1].set_xlabel("x")
+ax[0].set_ylabel(r"$v_i$(x)")
+ax[1].set_ylabel(r"$\partial v_i/\partial x$");
+```
 
 ## Gradients for hat functions
-Every element is surrounded by two nodes "carrying" a hat. 
+Every element is surrounded by two nodes "carrying" a hat.
 
 The gradients are piece-wise constant $\pm 1/\Delta x_i$
 
-$$ \Rightarrow \int_\Omega a \grad v_i \grad v_{i+1} \dd\Omega = -\frac{a_i}{\Delta x_i^2} \cdot \Delta x_i = -\frac{a_i}{\Delta x_i}$$ 
+$$ \Rightarrow \int_\Omega a \grad v_i \grad v_{i+1} \dd\Omega = -\frac{a_i}{\Delta x_i^2} \cdot \Delta x_i = -\frac{a_i}{\Delta x_i}$$
 
 $$ -\int_\Omega a \grad v_i \grad v_i \dd\Omega = \frac{a_{i-1}}{\Delta x_{i-1}^2}\Delta x_{i-1} + \frac{a_i}{\Delta x_i^2}\Delta x_i = \frac{a_{i-1}}{\Delta x_{i-1}} + \frac{a_i}{\Delta x_i} $$
 
@@ -81,7 +102,7 @@ $$ -\int_\Omega a \grad v_i \grad v_{i+2} \dd\Omega = 0 $$
 # System (stiffness) matrix
 
 Matrix integrating gradient of base functions for neighbors
-$A$ 
+$A$
 $$ \vb A_{i, i+1} = -\frac{a_i}{\Delta x_i^2} \cdot \Delta x_i $$
 
 $$ A_{i,i} = \int_\Omega a \grad v_i \grad v_i \dd\Omega = -A_{i,i+1} + A_{i+1,i}  $$
@@ -105,7 +126,7 @@ e.g. $f=\div j_s$ $\Rightarrow$ $b=\int v_i \div j_s \dd\Omega = \int_\Gamma $
 
 system identical to FD for $\Delta x=$const
 
-:::{.callout-tip icon="false" title="Difference of FE to FD"} 
+:::{.callout-tip icon="false" title="Difference of FE to FD"}
 Any source function $f(x)$ can be integrated on the whole space!
 :::
 
@@ -113,12 +134,12 @@ Any source function $f(x)$ can be integrated on the whole space!
 
 $\vb v$ holds the coefficient $u_i$ creating $u=\sum u_i v_i(x)$
 
-:::{.callout-tip icon="false" title="Difference of FE to FD"} 
+:::{.callout-tip icon="false" title="Difference of FE to FD"}
 $u$ is described on the whole space and approximates the solution, not the PDE!
 :::
 
 Hat functions: $u_i$ potentials on nodes, $u$ piece-wise linear
 
-:::{.callout-tip icon="false" title="Generality of FE"} 
+:::{.callout-tip icon="false" title="Generality of FE"}
 Arbitrary base functions $v_i$ can be used to describe $u$
 :::
