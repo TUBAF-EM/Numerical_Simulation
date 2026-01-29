@@ -1,0 +1,37 @@
+project:
+  type: book
+  output-dir: docs
+
+profile:
+  default: book
+  group:
+    - [book, slides]
+
+book:
+  title: "Numerical Simulation Methods in Geophysics"
+  author: "Prof. Dr. Thomas Günther (TU Bergakademie Freiberg)"
+  chapters:
+    - index.qmd
+    - 01_introduction.qmd
+    - 02_finite-differences.qmd
+    - 03_finite-elements.qmd
+    - slidedecks.qmd
+format:
+  html:
+    theme: cosmo
+    number-sections: true
+    lib-dir: site_libs
+    include-in-header:
+      - text: |
+          <script>
+          window.MathJax = {
+            loader: {
+              load: ['[tex]/physics']
+            },
+            tex: {
+              packages: {'[+]': ['physics']}
+            }
+          };
+          </script>
+
+editor: source

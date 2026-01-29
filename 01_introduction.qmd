@@ -1,0 +1,192 @@
+---
+title: "Introduction"
+jupyter: pg
+---
+
+<!-- 
+jupyter:
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: pg 
+-->
+
+<!-- ## Content  -->
+
+
+## Differential operators
+
+The physical fields are governed by partial differential equations with differential operators in space and time
+There are single derivative in space $\pdv{x}$ or time $\pdv{t}$.
+All derivatives into all spatial dimensions are subsumed in the *nabla* operator $\grad=(\pdv x, \pdv y, \pdv z)^T$.
+The (negative) gradient of a potential is the corresponding vector field with directions perpendicular to the isosurfaces into the direction of decreasing potential. 
+
+
+The divergence applies the nabla operator to a vectorial field by the dot product:
+$$\div \vb F = \pdv{F_x}{x} + \pdv{F_y}{y} + \pdv{F_z}{z}$$
+The *divergence* of a field describes the source strength using Gauss' law.
+
+::::: {.fragment}
+:::: {.columns}
+::: {.column width="70%"}
+Gauss' law: 
+
+*what's in (volume) comes out (surface)*
+$$\int_V \div\vb F\ dV = \iint_S \vb F \vdot \vb n\ dS$$
+:::
+::: {.column width="25%"}
+![Gauss's theorem in EM](pics/Divergence_theorem_in_EM.svg)
+:::
+::::
+:::::
+
+The *curl* (rotation) operator occurs particularly in electromagnetic problems, where magnetic fields are caused by (conduction or displacement) currents and electric fields infer changes in the magnetic field.
+It is described by the cross-product between nabla operator and the field
+$$\curl \vb F = (\pdv{F_z}{y}-\pdv{F_y}{z}, \pdv{F_x}{z}-\pdv{F_z}{x}, \pdv{F_y}{x}-\pdv{F_x}{y})^T$$
+
+::::: {.fragment}
+:::: {.columns}
+::: {.column width="70%"}
+Stokes law:
+
+ *what goes around comes around*
+$$\int_S \curl \vb F \vdot \vb dS = \iint_S \vb F \vdot \vb dl$$
+:::
+::: {.column width="25%"}
+![Stokes' theorem in EM](pics/Curl_theorem_in_EM.svg)
+:::
+::::
+:::::
+
+There are two laws concerning curl fields:
+
+1. curls have no divergence: $$\div (\curl \vb F)=0$${#eq-divcurl}
+2. potential fields have no curl $$\curl (\grad u)=0$${#eq-curlgrad}
+
+## Partial differential equations (PDEs)
+
+fdgdfhrfgh
+
+Mostly: solution of partial differential equations (PDEs) for either scalar (potentials) or vectorial (fields) quantities.
+
+### PDE Types 
+
+($u$-function, $f$-source, $a$/$c$-parameter):
+ 
+* elliptic (potential) PDE of Poisson type $$-\nabla^2 u=f$$ or Helmholtz type $$\nabla^2 u + k^2 u = f$$
+* parabolic (diffusion) PDE $$-\nabla^2 u + a \pdv{u}{t} \frac{\partial u}{\partial t}=f$$
+* hyperbolic (wave) PDE $$-\nabla^2 u + c^2 \frac{\partial^2 u}{\partial t^2}=f$$
+<!-- (plus diffusive term) -->
+<!-- $$\frac{\partial^2\ u}{{\partial x}^2} - c^2\frac{\partial^2 u}{\partial t^2} = 0$$ -->
+* coupled $\nabla\cdot u=f$ & $u = K \nabla p=0$ (Darcy flow)
+* nonlinear $(\nabla u)^2=s^2$ (Eikonal equation)
+
+### Poisson equation
+potential field $u$ generates field $\vec{F}=-\nabla u$
+
+causes some flow $\vec{j}=a \vec{F}$ 
+
+$a$ is some sort of conductivity (electric, hydraulic, thermal)
+
+continuity of flow: divergence of total current $\vb j + \vb j_s$ is zero
+
+$$ \div (a \nabla u) = - \div \vb j_s $$
+
+### The heat equation in 1D
+
+sought: Temperature $T$ as a function of space and time
+
+heat flux density $\vb q = \lambda\grad T$
+
+$q$ in W/m², $\lambda$ - heat conductivity/diffusivity in W/(m.K)
+
+Fourier's law: $\pdv{T}{t} - a \nabla^2 T = s$  ($s$ - heat source)
+
+temperature conduction $a=\frac{\lambda}{\rho c}$ ($\rho$ - density, $c$ - heat capacity)
+
+## Flow and transport
+### Darcy's law
+
+:::: {.columns}
+::: {.column width="50%"}
+
+volumetric flow rate $Q$ caused by gradient of pressure $p$
+
+$$ Q = \frac{k A}{\mu L} \Delta p $$
+
+$$\vb q = -\frac{k}{\mu} \nabla p $$
+
+$$\div\vb q = -\div (k/\mu \grad p) = 0$$
+
+:::
+::: {.column width="45%"}
+![Darcy's law](pics/darcy_law.svg)
+:::
+::::
+
+### Stokes equation
+
+$$ \mu \nabla^2 \vb v - \grad p + f = 0 $$
+
+$$\div\vb v = 0 $$
+
+### Navier-Stokes equations
+(incompressible, uniform viscosity)
+
+$$ \pdv{\vb u}{t} +(\vb u \vdot \grad) \vb u = \nu \nabla^2 \vb u - 1/\rho \grad p + f $$
+
+## Electromagnetics
+### Maxwell's equations
+
+* Faraday's law: currents & varying electric fields $\Rightarrow$ magnetic field 
+$$ \curl \vb H = \pdv{\vb D}{t} + \vb j $$ 
+* Ampere's law: time-varying magnetic fields induce electric field
+$$ \curl\vb E = -\pdv{\vb B}{t}$$ 
+* $\div\vb D = \varrho$ (charge $\Rightarrow$), $\div\vb B = 0$ (no magnetic charge)
+* material laws $\vb D = \epsilon \vb E$ and $\vec B = \mu \vb H$
+
+## Helmholtz equations
+
+e.g. from Fourier assumption $u=u_0 e^{\imath\omega t}$
+
+$$ \div (a\grad u) + k^2 u = f $$
+
+* Poisson operator assembled in stiffness matrix $\vb A$
+* additional terms with $u_i$ $\Rightarrow$ mass matrix $\vb M$
+
+$$ \Rightarrow \vb A + \vb M = \vb b $$
+
+## Helmholtz equations
+
+$$ \nabla^2 u + k^2 u = f $$
+
+results from wavenumber decomposition of diffusion or wave equations
+
+approach: $\vb F = \vb{F_0}e^{\imath\omega t} \quad\Rightarrow\quad \pdv{\vb F}{t}=\imath\omega\vb F \quad\Rightarrow\quad \pdv[2]{\vb F}{t}=-\omega^2\vb F$
+
+$$ \nabla^2 \vb F - a \nabla_t \vb F - c^2 \nabla^2_t \vb F = 0 $$
+
+$$ \Rightarrow \nabla^2\vb F - a\imath\omega\vb F + c^2 \omega^2\vb F = 0 $$
+
+# Wave equations
+## The eikonal equation
+
+Describes first-arrival times $t$ as a function of velocity ($v$) or slowness ($s$)
+
+$$ |\grad t| = s = 1/v $$
+
+![](pics/tt4.png){.fragment width="458" height="420"}
+
+## Hyberbolic equations 
+
+Acoustic wave equation in 1D
+$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$ 
+
+$u$..pressure/velocity/displacement, $c$..velocity
+
+Damped (mixed parabolic-hyperbolic) wave equation
+$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$ 
+
+```{python}
+import pygimli
+```
