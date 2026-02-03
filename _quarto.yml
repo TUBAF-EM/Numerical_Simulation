@@ -15,6 +15,7 @@ book:
     - 01_introduction.qmd
     - 02_finite-differences.qmd
     - 03_finite-elements.qmd
+    - 04_finite-volumes.qmd
     - slidedecks.qmd
 format:
   html:

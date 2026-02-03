@@ -3,7 +3,6 @@ title: "Introduction"
 jupyter: pg
 ---
 
-## Content
 In Geophysics, we are measuring a lot of different fields and try to use this for getting insight into the subsurface by using our knowledge of the physics.
 Numeric solutions are key to understanding the nature of the physical equations and to predict measurements. In the inverse problem, the solution of the forward problem, i.e. to predict synthetic data from a given parameter distribution, is the most important task and therefore also for the data analysis in geophysics.
 
@@ -22,15 +21,11 @@ Besides the proprietary Matlab, Python has become the most widespread programmin
 
 ### Online references
 
-
-
 * [pyGIMLi](https://pygimli.org): Python Geophysical Inversion and Modelling Library - the general-purpose library that we will make use here
 * [Homepage of Oskar](https://www.base-fn.de/oscar/) package - finite element package based upon pyGIMLi with brilliant tutorials and examples
 * [Geoscience.XYZ](https://geosci.xyz) - geoscience instruction material including the SimPEG code
 * [Fenics handbook](https://fenicsproject.org/documentation/) - a general-purpose FE library
 * [Theory of electromagnetics](https://ruboerner.github.io/ThEM/) - background of EM
-
-
 
 ## Differential operators
 
@@ -38,7 +33,6 @@ The physical fields are mostly governed by partial differential equations with d
 There are single derivatives in space $\pdv{x}$ or time $\pdv{t}$.
 All derivatives into all spatial dimensions are subsumed in the *nabla* operator $\grad=(\pdv x, \pdv y, \pdv z)^T$.
 The (negative) gradient of a potential is the corresponding vector field with directions perpendicular to the isosurfaces into the direction of decreasing potential.
-
 
 The divergence applies the nabla operator to a vectorial field by the dot product:
 $$\div \vb F = \pdv{F_x}{x} + \pdv{F_y}{y} + \pdv{F_z}{z}$$
@@ -104,7 +98,7 @@ There are also other types:
 * coupled $\nabla\cdot u=f$ & $u = K \nabla p=0$ (Darcy flow)
 * nonlinear $(\nabla u)^2=s^2$ (Eikonal equation)
 
-### Poisson equation
+### Potential probleme - Poisson equation
 
 ![](pics/gravityPotential.png)
 
@@ -119,7 +113,8 @@ The operator on the left-hand side is called Laplace operator, a (negative) seco
 Discarding $a$ for a moment, a increasing first derivative is a positive curvature, typically a minimum of a curve.
 Since we have a negative second derivative, we have a negative curvature, typically a maximum, at in the vicinity of a source (the right-hand side), where current flows into the system.
 
-### The heat equation in 1D
+### Diffusion problems
+#### The heat equation in 1D
 
 sought: Temperature $T$ as a function of space and time
 
@@ -131,8 +126,8 @@ Fourier's law: $\pdv{T}{t} - a \nabla^2 T = s$  ($s$ - heat source)
 
 temperature conduction $a=\frac{\lambda}{\rho c}$ ($\rho$ - density, $c$ - heat capacity)
 
-## Flow and transport
-### Darcy's law
+### Flow and transport
+#### Darcy's law
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -151,19 +146,19 @@ $$\div\vb q = -\div (k/\mu \grad p) = 0$$
 :::
 ::::
 
-### Stokes equation
+#### Stokes equation
 
 $$ \mu \nabla^2 \vb v - \grad p + f = 0 $$
 
 $$\div\vb v = 0 $$
 
-### Navier-Stokes equations
+#### Navier-Stokes equations
 (incompressible, uniform viscosity)
 
 $$ \pdv{\vb u}{t} +(\vb u \vdot \grad) \vb u = \nu \nabla^2 \vb u - 1/\rho \grad p + f $$
 
-## Electromagnetics
-### Maxwell's equations
+### Electromagnetics
+#### Maxwell's equations
 
 * Faraday's law: currents & varying electric fields $\Rightarrow$ magnetic field
 $$ \curl \vb H = \pdv{\vb D}{t} + \vb j $$
@@ -172,7 +167,7 @@ $$ \curl\vb E = -\pdv{\vb B}{t}$$
 * $\div\vb D = \varrho$ (charge $\Rightarrow$), $\div\vb B = 0$ (no magnetic charge)
 * material laws $\vb D = \epsilon \vb E$ and $\vec B = \mu \vb H$
 
-## Helmholtz equations
+### Helmholtz equations
 
 e.g. from Fourier assumption $u=u_0 e^{\imath\omega t}$
 
@@ -182,8 +177,6 @@ $$ \div (a\grad u) + k^2 u = f $$
 * additional terms with $u_i$ $\Rightarrow$ mass matrix $\vb M$
 
 $$ \Rightarrow \vb A + \vb M = \vb b $$
-
-## Helmholtz equations
 
 $$ \nabla^2 u + k^2 u = f $$
 
@@ -195,8 +188,19 @@ $$ \nabla^2 \vb F - a \nabla_t \vb F - c^2 \nabla^2_t \vb F = 0 $$
 
 $$ \Rightarrow \nabla^2\vb F - a\imath\omega\vb F + c^2 \omega^2\vb F = 0 $$
 
-# Wave equations
-## The eikonal equation
+### Wave phenomena
+
+#### Hyberbolic equations
+
+Acoustic wave equation in 1D
+$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
+
+$u$..pressure/velocity/displacement, $c$..velocity
+
+Damped (mixed parabolic-hyperbolic) wave equation
+$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
+
+#### The eikonal equation
 
 Describes first-arrival times $t$ as a function of velocity ($v$) or slowness ($s$)
 
@@ -220,12 +224,28 @@ Finally, we have the traveltimes at all nodes, including the ray paths in the in
 
 ![](pics/tt/tt4.png)
 
-## Hyberbolic equations
+## Content
 
-Acoustic wave equation in 1D
-$$ \pdv[2]{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
+We are going to introduce three main methods to solve PDEs after which the following chapters are organized:
 
-$u$..pressure/velocity/displacement, $c$..velocity
+- The Finite Difference (FD) method (FDM)
+- The Finite Element (FE) method (FEM)
+- The Finite Volume (FV) method (FVM)
 
-Damped (mixed parabolic-hyperbolic) wave equation
-$$ \pdv[2]{u}{t} - a\pdv{u}{t} - c^2\pdv[2]{u}{x} = 0 $$
+We start solving the Poisson equation (elliptic PDE) in 1D, eventually using all three methods.
+For FD, there is just a quick look to how it is working in 2D and 3D and in FV none at all.
+
+We dive into solving a parabolic equation, i.e. the instationary heat equation, first using FD, and later FE.
+
+The main method to be used is FE, as it represents the most widely use and most flexible of these three.
+Here, we go, like in FD, from the Poisson equation to the instationary heat equation.
+
+Next, we increase the spatial dimension to 2D, using irregularly structured triangle meshes.
+Unlike in 1D, it is tedious to program FE by ourselves.
+Therefore, we will use the Python package pyGIMLi for building meshes and setting up the matrices.
+
+Using FE, we go from the 2D Poisson equation to the complex-valued Helmholtz equation as it is arising for problems transferred from the time domain into the frequency domain.
+The example being used here is 2D diffusion of plane-wave electromagnetic fields into the air, as used in the Magnetotelluric (MT) method.
+
+Finally, it is shown how the vector electromagnetic diffusion problem is solved by using problem-adapted elements and boundary conditions, both in frequency and time domain.
+Finally, the performance of large-scale problems, is discussed.

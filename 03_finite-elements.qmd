@@ -52,16 +52,12 @@ $$ \int_\Omega a \grad w \grad v_i \dd\Omega - \int_\Gamma a w \grad v_i \dd\Gam
 
 $$ \int_\Omega a \grad w \grad v_i \dd\Omega - \int_\Gamma a w \grad v_i \dd\Gamma = \int_\Omega fw \dd\Omega $$
 
-::: {.fragment}
 Test functions equal shape (trial) functions $w_i=v_i$
 
 $$ \int_\Omega a \grad v_i \grad v_j \dd\Omega - \int_\Gamma a w \grad v_j \dd\Gamma = \int_\Omega f v_j \dd\Omega $$
-:::
 
-::: {.fragment}
 * choose $v_i$ so that $\grad v_i$ is simple and $\grad v_i \grad v_j$ mostly 0
 * divide subsurface in sub-volumes $\Omega_i$ with constant $a_i$ and $\grad v_j$
-:::
 
 ## Hat functions
 
