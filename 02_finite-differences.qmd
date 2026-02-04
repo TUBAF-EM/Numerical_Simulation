@@ -18,25 +18,34 @@ Neglecting $a$ for a moment, the left-hand side is the second derivative, i.e. a
 
 ## FD Approximation in 1D
 
+The basic idea of the Finite Difference method is to approximate the partial derivatives by finite derivatives using a predefined discretization.
+
 :::{.callout-tip icon="false" title="Approximate derivative operators by differences"}
 $$ \pdv{u}{x}\approx\frac{\Delta u}{\Delta x} $$
 :::
-and solution $u$ by finite values $u_i$ at points $x_i$, e.g.
-$$ \dv*{u}{x}_{2.5} := (u_3-u_2) / (x_3-x_2) $$
 
-Taylor expansion
+The solution $u$ is approximated by finite values $u_i$ at points $x_i$.
+Taking a Taylor expansion of any function f (describing the true solution) at a point $x_0$ we obtain
 $$f(x)=f(x_0)+f'(x0)(x-x_0)+f''(x_0)(x-x_0)^2/2+\ldots$$
+
+Mostly, the function is linearized, i.e. cut after the first derivative.
+The derivative is formulated from neighboring points $x_j$.
+For describing the first derivative, one can use different differences:
 
 ![Forward, backward and central difference for 1D FD grid](pics/fd/finite-difference.png)
 
+For example, the difference of $u$ between $x_2$ and $x_3$ is localized somehow between them
+$$ \dv*{u}{x}_{2.5} := (u_3-u_2) / (x_3-x_2) $$
 
+For the Poisson equation, we need a second derivative, approximated by a central difference right and left of the point, e.g., for $x_3$
 
-<!-- $$ \dv*[2]{u}{x}_{3} :=   -->
 $$\pdv[2]{u_3}{x}\approx
 \frac{\dv*{u}{x}_{3.5}-\dv*{u}{x}_{2.5}}{(x_4-x_2)/2}
 = \frac{(u_4-u_3)/(x_4-x_3)-(u_3-u_2)/(x_3-x_2)}{(x_4-x_2)/2} $$
 
-#### Difference stencil
+Hence, the second derivative is expressed by the value of a point and its neighbors, represented by a difference stencil.
+
+### Difference stencil
 Assumption: equidistant discretization $\Delta x$, conductivity 1
 
 1st derivative: $[-1, +1] / dx$, 2nd derivative $[+1, -2, +1] / dx^2$
@@ -55,9 +64,12 @@ This is illustrated by the Finite Difference stencil (@fig-1dfd-stencil): Every 
 ![1D Finite-Difference stencil](pics/fd/fd1dstencil.svg){#fig-1dfd-stencil}
 
 ### FDM on the general Poisson equation
-Assume the Poisson equation $$-\div(a\grad u)=f$$ with a conductivity term $a$
+Assume the Poisson equation $$-\div(a\grad u)=f$$ with a conductivity term $a$, for a 1D discretization
 
-$$ \pdv{(a \pdv*{u}{z})}{z} = a\pdv[2]{u}{z} + \pdv{a}{z} \pdv{u}{z}  $$
+$$ \pdv{(a \pdv*{u}{x})}{x} = a\pdv[2]{u}{x} + \pdv{a}{x} \pdv{u}{x}  $$
+
+It therefore contains both the second derivative (curvature) of $u$ as well as the first derivative of the conductivity $a$.
+This reflects the steadiness condition of the flow $a\pdv{u}{x}$, i.e., at conductivity contrasts the potential drop rate changes.
 
 ## Boundary conditions
 
@@ -268,63 +280,52 @@ Furthermore,
 1. a gradient in the conductivity acts like a source
 1. changes in
 
-### FD in 2D/3D
+## FD in 2D/3D
 
 <!-- ![Simple 2D conductivity grid](notebooks/grid32sigma.svg) -->
 
-If we go from 1D to 2D conditions, we have conductivities between each four nodes (@fig-2dfd-stencil).
+If we go from 1D to 2D conditions, we have conductivities between each four nodes.
 The red point is constructed by its four neighbors to the left and right, and to the top and bottom.
 
-![Simple 2D conductivity grid with FD stencil](pics/fd/grid32sigmaStencil.svg){#fig-2dfd-stencil}
+```{python}
+#| eval: true
+#| echo: false
+x = np.arange(4.)
+x[-1] += 0.4
+x[2] += 0.2
+y = np.arange(3.)
+y[-1] += 0.2
+grid = pg.createGrid(x, y)
+ax, _ = pg.show(grid)
+ax.plot(pg.x(grid), pg.y(grid), "ko", markersize=6)
+for i in range(len(x)-1):
+    for j in range(len(y)-1):
+        ij = f"{i},{j}"
+        ax.text((x[i]+x[i+1])/2,
+                (y[j]+y[j+1])/2,
+                r"$\sigma_{"+ij+"}$")
+ax.plot(x[:3], [1, 1, 1], "bo-", ms=12, lw=4)
+ax.plot([1, 1, 1], y[:3], "bo-", ms=12, lw=4)
+ax.plot(x[1], x[1], "ro", ms=12)
+```
 
 For introducing the conductivity into the coupling coefficient, there are always two values adjacent to the connecting edge.
 
 $$ C_{i,j}^{right} = a_{i,j-1/2} / (x_{i+1}-x_{i})^2 $$
 
-$a_{i,j-1/2}=(a_{i,j-1}+a_{i,j})/2$ ?
-
-harmonic, geometric? weighting?
-
-$a_{i,j-1/2}=\frac{a_{i,j-1}\Delta y_{j-1}+a_{i,j}\Delta y_{j}}{y_j+1-y_{j-1}}$?
-
-#### FD in 2D: discretization
-
-:::: {.columns}
-::: {.column}
-::: {.r-stack}
-$\nabla$ operator in $x$ and $y$ direction
-
-![Simple 2D conductivity grid](pics/grid32a.svg)
-
-![Simple 2D conductivity grid with FD stencil](pics/grid32stencil.svg){.fragment}
-:::
-:::
-::: {.column}
-:::: {.fragment}
-$$ C_{i,j}^{right} = a_{i,j-1/2} / (x_{i+1}-x_{i})^2 $$
-
-$a_{i,j-1/2}=(a_{i,j-1}+a_{i,j})/2$ ?
-
-harmonic, geometric? weighting?
+But how do we define the *conductivity between the two nodes* in 2D as there are two neighboring, $a_{i,j-1}$ and $a_{i,j}$. We need a mean, like $a_{i,j-1/2}=(a_{i,j-1}+a_{i,j})/2$ but instead of the arithmetic, we could also use the harmonic (mean of resistivities) or geometric (logarithmic) mean.
+Furthermore, we can include the size of the cells as weighting functions.
 
 $a_{i,j-1/2}=\frac{a_{i,j-1}\Delta y_{j-1}+a_{i,j}\Delta y_{j}}{y_j+1-y_{j-1}}$?
-::::
-:::
-::::
 
-#### 3D discretization
-:::: {.columns}
-::: {.column}
+### 3D discretization
 ![3D discretization](pics/fd/fd3ddiscr.png)
-:::
-::: {.column}
+
 ![coupling coefficient ](pics/fd/fd3d_ctop.png)
-:::
-::::
 
 ## Parabolic PDEs - Time stepping
 
-### Heat transfer in 1D
+### Heat transfer in 1D with periodic boundary conditions
 $$ \pdv{T}{t} - a \pdv[2]{T}{z} = 0 $$
 
 with the periodic boundary conditions:
@@ -334,8 +335,6 @@ with the periodic boundary conditions:
 
 and the initial condition $T(z, t=0)=\sin \pi z$ has the analytical solution
 $$ T(z, t) = \Delta T e^{-\pi^2 t} \sin \pi z $$
-
-### Periodic boundary conditions
 
 $$ \pdv{T}{t} - \div (a\grad{T}) = \div q_s $$
 
@@ -376,7 +375,7 @@ plt.ylabel("T (°C)")
 plt.grid()
 ```
 
-### Separation of variables
+#### Solution by separation of variables
 
 $$ \pdv{T}{t} = a\pdv[2]{T}{z} $$
 
@@ -385,8 +384,6 @@ $T(t, z)/\Delta T - T_0 = \theta(t) Z(z)$
 $$ Z \pdv{\theta}{t} = a \theta \pdv[2]{Z}{z} $$
 
 $$ \frac1\theta \pdv{\theta}{t} = C = a \frac{1}{Z}\pdv[2]{Z}{z} $$
-
-### Solution
 
 regarding the BC $e^{\imath\omega t}$ leads to $C=\imath\omega$ and thus $\theta=\theta_0 e^{\imath\omega t}$
 
@@ -400,7 +397,7 @@ Z_0 e^{\sqrt{\omega/2a}(1+\imath)z} $$
 $$ T(t, z)/\Delta T + T_0 = Z(z)\theta(t)=
 Z_0\theta_0 e^{-\sqrt{\omega/2a}z} e^{i(\omega t-\sqrt{\omega/2a}z)} $$
 
-### Interpretation
+#### Interpretation
 
 replacing the term $\sqrt{2a/\omega}=\sqrt{a t_P/\pi}=d$ leads to
 
@@ -412,7 +409,7 @@ $$ T(z, t) = T_0 + \Delta T e^{-z/d} \sin(\omega t - z/d) $$
 1. Daily cycle: decay depth $d$=6cm, minimum depth=20cm
 2. Yearly cycle: decay depth $d$=1.2m, minimum depth=4m
 
-### Depth profiles
+#### Depth profiles
 
 ```{python}
 #| output-location: column
@@ -435,7 +432,7 @@ ax.legend()
 ax.grid()
 ```
 
-### Temporal behaviour
+#### Temporal behaviour
 ```{python}
 #| output-location: column
 #| code-line-numbers: false
@@ -467,19 +464,52 @@ for every time step $i$ (using FDM, FEM, FVM etc.)
 Finite-difference step in time: update field by
 $$ T_{i+1} = T_i + a \pdv[2]{u}{z} \cdot \Delta t$$
 
-![Forward difference stencil](pics/fd/dtforward.svg)
+The new field is constructed by old fields only, expressed in the difference stencil (the green line represents time stepping)
+
+![Forward (explicit) difference stencil](pics/fd/dtforward.svg)
 
 ### Implicit (Euler) method
 
 $$ \pdv{T}{t}^n \approx \frac{T^{n+1}-T^n}{\Delta t} = a \pdv[2]{T}{z} ^{n+1} $$
 
-![Forward difference stencil](pics/fd/dtbackward.svg)
+Rearranging for time steps (new left and old right), this leads to
+
+$$ T^{n+1} - \Delta t a \pdv[2]{T}{z}^{n+1} = T^n $$
+
+Term $a \pdv[2]{T}{z}^{n+1}$ is represented by the system matrix $\vb A$ so that we can write
+
+$$ \vb T^{n+1} - \vb A \vb T^{n+1} = (\vb I - \vb A) \vb T^{n+1} = \vb T^n $$
+
+As $\vb A$ involves the neighbors, which are only from the new time step, this is expressed in the backward stencil difference stencil
+
+![Backward (implicit) difference stencil](pics/fd/dtbackward.svg)
 
 ### Mixed - Crank-Nicholson method
 
+As the finite difference in time is centered around the mean times, it seems plausible to use the temporal mean value of $T$
+
 $$ \pdv{T}{t}^n \approx \frac{T^{n+1}-T^n}{\Delta t} = \frac12 a \pdv[2]{T}{z} ^n + \frac12 a \pdv[2]{T}{z} ^{n+1} $$
 
+Multiplying with 2 and rearranging new and old values leads to
+
+$$ 2 T^{n+1} - \Delta t a \pdv[2]{T}{z}^{n+1} = 2 T^n + \Delta t a \pdv[2]{T}{z}^n $$
+
+Like for the implicit method, the operator is expressed by the system matrix $\vb A$, leading to
+
+$$ 2\vb T^{n+1} + \vb A \vb T^{n+1} = (2\vb I + \vb A) \vb T^{n+1} = (2\vb I - \vb A) \vb T^n $$
+
+So the new value is computed not only from its current neighbors, but also the second derivative apparent in the previous time step, expressed by the (mixed) finite difference stencil.
+
 ![Mixed (balanced) difference stencil](pics/fd/dtmixed.svg)
+
+To summarize all three methods, the following table is created
+
+| | | | | | |
+|-------------|-------------:|-|-|-:|-|
+|**Explicit**:||$\vb u^{n+1}$|$=$|$(\vb I - \Delta t \vb A)$|$\vb u^n$|
+|**Implicit**:|$(\vb I + \Delta t \vb A)$|$\vb u^{n+1}$|$=$||$\vb u^n$|
+|**Mixed**:|$(2\vb I + \Delta t \vb A)$|$\vb u^{n+1}$|$=$|$(2\vb I - \Delta t \vb A)$|$\vb u^n$|
+
 
 ## Hyberbolic equations
 
