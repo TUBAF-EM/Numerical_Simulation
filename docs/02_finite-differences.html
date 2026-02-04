@@ -422,7 +422,7 @@ Figure&nbsp;2.1: 1D Finite-Difference stencil
 <section id="the-general-case" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="the-general-case"><span class="header-section-number">2.3</span> The general case</h2>
 <p><span class="math inline">\(\Delta x \ne 1\)</span> &amp; <span class="math inline">\(a \ne 1\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(a \pdv{u}{x} \approx a_i\frac{u_{i+1}-u_i}{x_{i+1}-x_i}\)</span></p>
-<div id="64750abe" class="cell" data-execution_count="1">
+<div id="1cf48ebb" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -560,7 +560,7 @@ C_1^L &amp; -(C_1^L+C_1^R) &amp; C_1^R &amp; 0 &amp; \ldots &amp;
 <h2 data-number="2.4" class="anchored" data-anchor-id="fd-in-2d3d"><span class="header-section-number">2.4</span> FD in 2D/3D</h2>
 <!-- ![Simple 2D conductivity grid](notebooks/grid32sigma.svg) -->
 <p>If we go from 1D to 2D conditions, we have conductivities between each four nodes. The red point is constructed by its four neighbors to the left and right, and to the top and bottom.</p>
-<div id="e5301a1b" class="cell" data-execution_count="2">
+<div id="71059b51" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -612,7 +612,7 @@ C_1^L &amp; -(C_1^L+C_1^R) &amp; C_1^R &amp; 0 &amp; \ldots &amp;
 <p><span class="math display">\[ T_0(t) = T_m + \Delta T \sin \omega t \]</span></p>
 <p><span class="math inline">\(T_m\)</span> mean temperature (e.g.&nbsp;12°C), <span class="math inline">\(\Delta T\)</span> variation, e.g.&nbsp;8°C</p>
 <p><span class="math inline">\(\omega=2\pi/t_P\)</span> daily (<span class="math inline">\(T_d\)</span>=3600*24s) or yearly (<span class="math inline">\(T_y=365 T_d\)</span>) cycle ::: ::: {.column}</p>
-<div id="c07ec4bb" class="cell" data-execution_count="4">
+<div id="495cc06d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>day <span class="op">=</span> <span class="dv">3600</span> <span class="op">*</span> <span class="dv">24</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>T0, dT <span class="op">=</span> <span class="dv">12</span>, <span class="dv">8</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.arange(<span class="dv">100</span>) <span class="op">/</span> <span class="dv">50</span> <span class="op">*</span> day</span>
@@ -658,7 +658,7 @@ Z_0\theta_0 e^{-\sqrt{\omega/2a}z} e^{i(\omega t-\sqrt{\omega/2a}z)} \]</span></
 </section>
 <section id="depth-profiles" class="level4" data-number="2.5.1.3">
 <h4 data-number="2.5.1.3" class="anchored" data-anchor-id="depth-profiles"><span class="header-section-number">2.5.1.3</span> Depth profiles</h4>
-<div id="bc94b601" class="cell" data-output-location="column" data-execution_count="5">
+<div id="abcfdcc2" class="cell" data-output-location="column" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">1.5e-7</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>year <span class="op">=</span> day<span class="op">*</span><span class="dv">365</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> sqrt(a<span class="op">*</span>year<span class="op">/</span>pi)</span>
@@ -685,7 +685,7 @@ Z_0\theta_0 e^{-\sqrt{\omega/2a}z} e^{i(\omega t-\sqrt{\omega/2a}z)} \]</span></
 </section>
 <section id="temporal-behaviour" class="level4" data-number="2.5.1.4">
 <h4 data-number="2.5.1.4" class="anchored" data-anchor-id="temporal-behaviour"><span class="header-section-number">2.5.1.4</span> Temporal behaviour</h4>
-<div id="b3ad4f39" class="cell" data-output-location="column" data-execution_count="6">
+<div id="94436cbf" class="cell" data-output-location="column" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="fl">1.01</span>, <span class="fl">0.01</span>) <span class="op">*</span> year</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.4</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -814,7 +814,7 @@ Z_0\theta_0 e^{-\sqrt{\omega/2a}z} e^{i(\omega t-\sqrt{\omega/2a}z)} \]</span></
 </section>
 <section id="example-velocity-distribution" class="level3" data-number="2.6.2">
 <h3 data-number="2.6.2" class="anchored" data-anchor-id="example-velocity-distribution"><span class="header-section-number">2.6.2</span> Example: velocity distribution</h3>
-<div id="e478b6d1" class="cell" data-output-location="column-fragment" data-execution_count="7">
+<div id="4be8306c" class="cell" data-output-location="column-fragment" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>np.arange(<span class="dv">0</span>, <span class="fl">600.01</span>, <span class="fl">0.5</span>)</span>
@@ -839,7 +839,7 @@ Z_0\theta_0 e^{-\sqrt{\omega/2a}z} e^{i(\omega t-\sqrt{\omega/2a}z)} \]</span></
 <section id="initial-displacement" class="level3" data-number="2.6.3">
 <h3 data-number="2.6.3" class="anchored" data-anchor-id="initial-displacement"><span class="header-section-number">2.6.3</span> Initial displacement</h3>
 <p>Derivative of Gaussian (Ricker wavelet)</p>
-<div id="3c04a3d7" class="cell" data-output-location="column-fragment" data-execution_count="8">
+<div id="5b8b638b" class="cell" data-output-location="column-fragment" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>l<span class="op">=</span><span class="fl">5.0</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial displacement field [m].</span></span>
@@ -861,7 +861,7 @@ Z_0\theta_0 e^{-\sqrt{\omega/2a}z} e^{i(\omega t-\sqrt{\omega/2a}z)} \]</span></
 </section>
 <section id="time-propagation" class="level3" data-number="2.6.4">
 <h3 data-number="2.6.4" class="anchored" data-anchor-id="time-propagation"><span class="header-section-number">2.6.4</span> Time propagation</h3>
-<div id="197cea54" class="cell" data-output-location="column-fragment" data-execution_count="9">
+<div id="3ff7b50c" class="cell" data-output-location="column-fragment" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>u_last<span class="op">=</span>u</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.5</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ddu <span class="op">=</span> np.zeros_like(u)</span>

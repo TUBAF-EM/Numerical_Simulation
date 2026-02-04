@@ -294,57 +294,17 @@
     "href": "04_finite-volumes.html",
     "title": "4  Finite Volumes",
     "section": "",
-    "text": "5 Advection problems\nVolume elements move with velocity \\(\\vb v\\) and take (advectio=move with)\n\\[\\pdv{T}{t} \\Rightarrow \\pdv{T}{t} + \\dv{z}{t}\\pdv{T}{z}\\] in 3D \\(\\vb{v}\\cdot\\grad{T}\\) \\(\\Rightarrow\\) advection-dispersion equation\n\\[\\pdv{T}{t} - \\div a\\grad{T} + \\vb{v}\\cdot\\grad{T} = \\div q_s\\]",
+    "text": "4.1 Advection problems\nVolume elements move with velocity \\(\\vb v\\) and take (advectio=move with)\n\\[\\pdv{T}{t} \\Rightarrow \\pdv{T}{t} + \\dv{z}{t}\\pdv{T}{z}\\] in 3D \\(\\vb{v}\\cdot\\grad{T}\\) \\(\\Rightarrow\\) advection-dispersion equation\n\\[\\pdv{T}{t} - \\div a\\grad{T} + \\vb{v}\\cdot\\grad{T} = \\div q_s\\]",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
     ]
   },
   {
-    "objectID": "04_finite-volumes.html#continuity-equation",
-    "href": "04_finite-volumes.html#continuity-equation",
+    "objectID": "04_finite-volumes.html#advection-problems",
+    "href": "04_finite-volumes.html#advection-problems",
     "title": "4  Finite Volumes",
-    "section": "5.1 Continuity equation",
-    "text": "5.1 Continuity equation\n\\[ \\dv{t}\\int_V u(\\vb r, t) \\dd V = \\int_V \\pdv{u(\\vb r, t)}{t} + \\int_V \\vb v \\vdot \\grad u(\\vb r, t) \\dd V \\]\n\\[ \\dv{t}\\int_V u(\\vb r, t) \\dd V = \\int_V \\pdv{u(\\vb r, t)}{t} + \\int_{\\partial V} u(\\vb r, t) \\vb v\\vdot \\vb n \\]\nConservation of mass (\\(u\\)=\\(\\varrho\\)) \\(\\Rightarrow\\) divergence of flux \\(u\\vb v\\)\n\\[ \\pdv{u}{t} + \\div(u \\vb v) = 0 \\]\ncan also be conservation of impuls or energy",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#advection-dispersion-equation-general",
-    "href": "04_finite-volumes.html#advection-dispersion-equation-general",
-    "title": "4  Finite Volumes",
-    "section": "5.2 Advection-dispersion equation (general)",
-    "text": "5.2 Advection-dispersion equation (general)\n\\[ \\pdv{u}{t}+\\vb v\\cdot\\grad u - \\div(a\\grad u) = b u + f(\\vb r, t)\\]\nflux \\(\\vb v\\cdot\\grad u\\) (Advection), stiffness \\(-\\div(a\\grad u)\\) (Dispersion=Diffusion)\narising in Computational Fluid Dynamics\nSolve, e.g., by pyGIMLi.solver.solveFiniteVolume (Link)\nbc = dict(Dirichlet={4: 1.0, 3: 0.0}, Neumann={2: 1.0})\nu = ps.solveFiniteVolume(mesh, a, b, f, bc=bc, t=times, c)",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#computational-magnetohydrodynamics",
-    "href": "04_finite-volumes.html#computational-magnetohydrodynamics",
-    "title": "4  Finite Volumes",
-    "section": "5.3 Computational magnetohydrodynamics",
-    "text": "5.3 Computational magnetohydrodynamics\nMagnetohydrodynamic induction equation\n\\[\\pdv{\\vb B}{t} =  \\curl \\frac{1}{\\mu\\sigma} \\curl \\vb B + \\curl(\\vb v \\cross \\vb B)\\]\nForces on fluid (induction, Coriolis, pressure, gravity, Lorentz) \\[ \\rho \\pdv{\\vb v}{t} + \\rho (\\vb v \\cdot \\grad) \\vb v + \\grad p = -2\\omega\\cross\\vb v+\\alpha T \\vb g + \\vb j \\cross \\vb B / \\rho \\]",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#fe-solution-can-bear-instabilities",
-    "href": "04_finite-volumes.html#fe-solution-can-bear-instabilities",
-    "title": "4  Finite Volumes",
-    "section": "5.4 FE solution can bear instabilities",
-    "text": "5.4 FE solution can bear instabilities",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#simple-1d-advection-problem",
-    "href": "04_finite-volumes.html#simple-1d-advection-problem",
-    "title": "4  Finite Volumes",
-    "section": "5.5 Simple 1D advection problem",
-    "text": "5.5 Simple 1D advection problem\n\\[\\pdv{u}{t} + \\pdv{v(u)}{x}=0\\]\nSolution \\(u_i\\) at node \\(i\\) represents average value over cell\n\\[ \\overline{u}_i(t) = \\frac{1}{x_{i+1/2}-x_{i-1/2}} \\int_{x_{i-1/2}}^{x_{i+1/2}} u(x, t)\\dd x \\]\n\\[ \\int_{t_1}^{t_2} \\pdv{u}{t} = u(x, t_2)-u(x, t_1) = - \\int_{t_1}^{t_2} \\pdv{v(u)}{x} \\]",
+    "section": "",
+    "text": "4.1.1 Continuity equation\n\\[ \\dv{t}\\int_V u(\\vb r, t) \\dd V = \\int_V \\pdv{u(\\vb r, t)}{t} + \\int_V \\vb v \\vdot \\grad u(\\vb r, t) \\dd V \\]\n\\[ \\dv{t}\\int_V u(\\vb r, t) \\dd V = \\int_V \\pdv{u(\\vb r, t)}{t} + \\int_{\\partial V} u(\\vb r, t) \\vb v\\vdot \\vb n \\]\nConservation of mass (\\(u\\)=\\(\\varrho\\)) \\(\\Rightarrow\\) divergence of flux \\(u\\vb v\\)\n\\[ \\pdv{u}{t} + \\div(u \\vb v) = 0 \\]\ncan also be conservation of impuls or energy\n\n\n4.1.2 Advection-dispersion equation (general)\n\\[ \\pdv{u}{t}+\\vb v\\cdot\\grad u - \\div(a\\grad u) = b u + f(\\vb r, t)\\]\nflux \\(\\vb v\\cdot\\grad u\\) (Advection), stiffness \\(-\\div(a\\grad u)\\) (Dispersion=Diffusion)\narising in Computational Fluid Dynamics\nSolve, e.g., by pyGIMLi.solver.solveFiniteVolume (Link)\nbc = dict(Dirichlet={4: 1.0, 3: 0.0}, Neumann={2: 1.0})\nu = ps.solveFiniteVolume(mesh, a, b, f, bc=bc, t=times, c)\n\n\n4.1.3 Computational magnetohydrodynamics\nMagnetohydrodynamic induction equation\n\\[\\pdv{\\vb B}{t} =  \\curl \\frac{1}{\\mu\\sigma} \\curl \\vb B + \\curl(\\vb v \\cross \\vb B)\\]\nForces on fluid (induction, Coriolis, pressure, gravity, Lorentz) \\[ \\rho \\pdv{\\vb v}{t} + \\rho (\\vb v \\cdot \\grad) \\vb v + \\grad p = -2\\omega\\cross\\vb v+\\alpha T \\vb g + \\vb j \\cross \\vb B / \\rho \\]\n\n4.1.3.1 FE solution can bear instabilities",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
     ]
@@ -353,88 +313,18 @@
     "objectID": "04_finite-volumes.html#finite-volume-schemes",
     "href": "04_finite-volumes.html#finite-volume-schemes",
     "title": "4  Finite Volumes",
-    "section": "5.6 Finite Volume schemes",
-    "text": "5.6 Finite Volume schemes\n\n\n\n\nupwind method:\n\\[Q_i^{n+1} = Q_i^n - a\\frac{\\Delta t}{\\Delta x} (Q_i^n-Q_{i-1}^N)\\]\nLax-Wendroff (2nd order)\n\\[Q_i^{n+1} = Q_i^n - a\\frac{\\Delta t}{2\\Delta x} (Q_{i+1}^n-Q_{i-1}^N)\\]\n\\[+\\frac12 (a\\frac{\\Delta t}{2\\Delta x})^2 (Q_{i+1}^n-2Q_{i}^N+Q_{i-1}^N)\\]",
+    "section": "4.2 Finite Volume schemes",
+    "text": "4.2 Finite Volume schemes\n\n4.2.1 Simple 1D advection problem\n\\[\\pdv{u}{t} + \\pdv{v(u)}{x}=0\\]\nSolution \\(u_i\\) at node \\(i\\) represents average value over cell\n\\[ \\overline{u}_i(t) = \\frac{1}{x_{i+1/2}-x_{i-1/2}} \\int_{x_{i-1/2}}^{x_{i+1/2}} u(x, t)\\dd x \\]\n\\[ \\int_{t_1}^{t_2} \\pdv{u}{t} = u(x, t_2)-u(x, t_1) = - \\int_{t_1}^{t_2} \\pdv{v(u)}{x} \\]\n\n\n\n\nupwind method:\n\\[Q_i^{n+1} = Q_i^n - a\\frac{\\Delta t}{\\Delta x} (Q_i^n-Q_{i-1}^N)\\]\nLax-Wendroff (2nd order)\n\\[Q_i^{n+1} = Q_i^n - a\\frac{\\Delta t}{2\\Delta x} (Q_{i+1}^n-Q_{i-1}^N)\\]\n\\[+\\frac12 (a\\frac{\\Delta t}{2\\Delta x})^2 (Q_{i+1}^n-2Q_{i}^N+Q_{i-1}^N)\\]\n\n\n\\[ u(x, t_2) = u(x, t_1) - \\int_{t_1}^{t_2} \\pdv{v(u)}{x} \\]\n\\[ \\overline{u}(t_2) = \\frac{1}{x_{i+1/2}-x_{i-1/2}} \\int_{x_{i-1/2}}^{x_{i+1/2}}\\qty\\Big(u(x,t_1) - \\int_{t_1}^{t_2} \\pdv{v(u)}{x})  \\]\n\\[ \\overline{u}(t_2) = \\overline{u}(t_1) - \\frac{1}{x_{i+1/2}-x_{i-1/2}}\n\\qty\\Big(\\int_{t_1}^{t_2} v_{i+1/2} \\dd t - \\int_{t_1}^{t_2} v_{i-1/2} \\dd t) \\]\n\n4.2.1.1 Result\n\\[ \\pdv{\\overline{u}_i}{t} +\\frac{1}{\\Delta x_i} (v_{i+1/2}-v_{i-1/2}) = 0 \\]\n\n\n\n\n\n\nNote\n\n\n\nFinite volume schemes are conservative as cell averages change through the edge fluxes. In other words, one cell’s loss is always another cell’s gain!\n\n\n\n\n4.2.1.2 Visualization\n\n\n\n\n\n\n\n\n4.2.2 Similarity to staggered (E, B) grid methods\n\n\n\n\n\n\n\n4.2.3 Conservation law (3D) problem\n\\[\\pdv{\\vb u}{t} + \\div\\vb v(u)= 0\\]\nvolume integral over cell, using Gauss’ law\n\\[\\int_{\\Omega_i} \\pdv{\\vb u}{t}\\dd\\Omega+\\int_{\\Omega_i} \\div\\vb v(u) \\dd\\Omega = 0 =\n\\int_{\\Omega_i} \\pdv{\\vb u}{t}\\dd\\Omega+\\int_{\\Gamma_i} \\vb v(u) \\cdot \\vb n \\dd{\\Gamma} \\]\n\\[\\Rightarrow \\pdv{\\overline{u}}{t} +\\frac{1}{V_i}\\int_{\\Gamma_i}\\vb v(u)\\cdot \\vb n \\dd{\\Gamma} =0  \\]\n\n\n4.2.4 Godunov’s scheme\n\nDefine piece-wise constant approximation \\(u^{n+1}\\)\nObtain solution for local Riemann problem at cell interfaces\nAverage state variables from 2. over",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
     ]
   },
   {
-    "objectID": "04_finite-volumes.html#simple-1d-advection-problem-1",
-    "href": "04_finite-volumes.html#simple-1d-advection-problem-1",
+    "objectID": "04_finite-volumes.html#the-methods-fd-fe-and-fv",
+    "href": "04_finite-volumes.html#the-methods-fd-fe-and-fv",
     "title": "4  Finite Volumes",
-    "section": "5.7 Simple 1D advection problem",
-    "text": "5.7 Simple 1D advection problem\n\\[ u(x, t_2) = u(x, t_1) - \\int_{t_1}^{t_2} \\pdv{v(u)}{x} \\]\n\\[ \\overline{u}(t_2) = \\frac{1}{x_{i+1/2}-x_{i-1/2}} \\int_{x_{i-1/2}}^{x_{i+1/2}}\\qty\\Big(u(x,t_1) - \\int_{t_1}^{t_2} \\pdv{v(u)}{x})  \\]\n\\[ \\overline{u}(t_2) = \\overline{u}(t_1) - \\frac{1}{x_{i+1/2}-x_{i-1/2}}\n\\qty\\Big(\\int_{t_1}^{t_2} v_{i+1/2} \\dd t - \\int_{t_1}^{t_2} v_{i-1/2} \\dd t) \\]",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#result",
-    "href": "04_finite-volumes.html#result",
-    "title": "4  Finite Volumes",
-    "section": "5.8 Result",
-    "text": "5.8 Result\n\\[ \\pdv{\\overline{u}_i}{t} +\\frac{1}{\\Delta x_i} (v_{i+1/2}-v_{i-1/2}) = 0 \\]\n\n\n\n\n\n\nNote\n\n\n\nFinite volume schemes are conservative as cell averages change through the edge fluxes. In other words, one cell’s loss is always another cell’s gain!",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#visualization",
-    "href": "04_finite-volumes.html#visualization",
-    "title": "4  Finite Volumes",
-    "section": "5.9 Visualization",
-    "text": "5.9 Visualization",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#similarity-to-staggered-e-b-grid-methods",
-    "href": "04_finite-volumes.html#similarity-to-staggered-e-b-grid-methods",
-    "title": "4  Finite Volumes",
-    "section": "5.10 Similarity to staggered (E, B) grid methods",
-    "text": "5.10 Similarity to staggered (E, B) grid methods",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#conservation-law-3d-problem",
-    "href": "04_finite-volumes.html#conservation-law-3d-problem",
-    "title": "4  Finite Volumes",
-    "section": "5.11 Conservation law (3D) problem",
-    "text": "5.11 Conservation law (3D) problem\n\\[\\pdv{\\vb u}{t} + \\div\\vb v(u)= 0\\]\nvolume integral over cell, using Gauss’ law\n\\[\\int_{\\Omega_i} \\pdv{\\vb u}{t}\\dd\\Omega+\\int_{\\Omega_i} \\div\\vb v(u) \\dd\\Omega = 0 =\n\\int_{\\Omega_i} \\pdv{\\vb u}{t}\\dd\\Omega+\\int_{\\Gamma_i} \\vb v(u) \\cdot \\vb n \\dd{\\Gamma} \\]\n\\[\\Rightarrow \\pdv{\\overline{u}}{t} +\\frac{1}{V_i}\\int_{\\Gamma_i}\\vb v(u)\\cdot \\vb n \\dd{\\Gamma} =0  \\]",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#godunovs-scheme",
-    "href": "04_finite-volumes.html#godunovs-scheme",
-    "title": "4  Finite Volumes",
-    "section": "5.12 Godunov’s scheme",
-    "text": "5.12 Godunov’s scheme\n\nDefine piece-wise constant approximation \\(u^{n+1}\\)\nObtain solution for local Riemann problem at cell interfaces\nAverage state variables from 2. over",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#the-methods",
-    "href": "04_finite-volumes.html#the-methods",
-    "title": "4  Finite Volumes",
-    "section": "5.13 The methods",
-    "text": "5.13 The methods\n\n\n\n\n\n\nThe Finite Difference method\n\n\n\napproximates the partial derivatives by difference quotients (beware \\(\\Delta x\\) and \\(\\Delta a\\))\n\n\n\n\n\n\n\n\nThe Finite Element method\n\n\n\napproximates the solution through base functions in integrative sense\n\n\n\n\n\n\n\n\nThe Finite Volume method\n\n\n\napproximates the solution by piecewise constant values and ensures conservation law by fluxes",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
-    ]
-  },
-  {
-    "objectID": "04_finite-volumes.html#discontinuous-galerkin-scheme",
-    "href": "04_finite-volumes.html#discontinuous-galerkin-scheme",
-    "title": "4  Finite Volumes",
-    "section": "5.14 Discontinuous Galerkin scheme",
-    "text": "5.14 Discontinuous Galerkin scheme\n\nuse Galerkin method (multiply test function and take as basis)\ndiscretize fields by piece-wise constant functions\n\nfields are becoming discontinuous\n\ncommunicate flux between elements by Riemann problem scheme\nevery element independent (also mesh size)\nfully parallelized (element-wise)",
+    "section": "4.3 The methods FD, FE and FV",
+    "text": "4.3 The methods FD, FE and FV\n\n\n\n\n\n\nThe Finite Difference method\n\n\n\napproximates the partial derivatives by difference quotients (beware \\(\\Delta x\\) and \\(\\Delta a\\))\n\n\n\n\n\n\n\n\nThe Finite Element method\n\n\n\napproximates the solution through base functions in integrative sense\n\n\n\n\n\n\n\n\nThe Finite Volume method\n\n\n\napproximates the solution by piecewise constant values and ensures conservation law by fluxes\n\n\n\n4.3.1 Discontinuous Galerkin scheme\n\nuse Galerkin method (multiply test function and take as basis)\ndiscretize fields by piece-wise constant functions\n\nfields are becoming discontinuous\n\ncommunicate flux between elements by Riemann problem scheme\nevery element independent (also mesh size)\nfully parallelized (element-wise)",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Finite Volumes</span>"
     ]
