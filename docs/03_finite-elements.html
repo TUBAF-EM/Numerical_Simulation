@@ -227,10 +227,7 @@ window.Quarto = {
   <ul>
   <li><a href="#history-and-background" id="toc-history-and-background" class="nav-link active" data-scroll-target="#history-and-background"><span class="header-section-number">3.1</span> History and background</a></li>
   <li><a href="#variational-formulation-of-poisson-equation" id="toc-variational-formulation-of-poisson-equation" class="nav-link" data-scroll-target="#variational-formulation-of-poisson-equation"><span class="header-section-number">3.2</span> Variational formulation of Poisson equation</a></li>
-  <li><a href="#variational-formulation-of-poisson-equation-1" id="toc-variational-formulation-of-poisson-equation-1" class="nav-link" data-scroll-target="#variational-formulation-of-poisson-equation-1"><span class="header-section-number">3.3</span> Variational formulation of Poisson equation</a></li>
-  <li><a href="#galerkins-method" id="toc-galerkins-method" class="nav-link" data-scroll-target="#galerkins-method"><span class="header-section-number">3.4</span> Galerkins method</a></li>
-  <li><a href="#hat-functions" id="toc-hat-functions" class="nav-link" data-scroll-target="#hat-functions"><span class="header-section-number">3.5</span> Hat functions</a></li>
-  <li><a href="#gradients-for-hat-functions" id="toc-gradients-for-hat-functions" class="nav-link" data-scroll-target="#gradients-for-hat-functions"><span class="header-section-number">3.6</span> Gradients for hat functions</a></li>
+  <li><a href="#hat-functions" id="toc-hat-functions" class="nav-link" data-scroll-target="#hat-functions"><span class="header-section-number">3.3</span> Hat functions</a></li>
   <li><a href="#system-stiffness-matrix" id="toc-system-stiffness-matrix" class="nav-link" data-scroll-target="#system-stiffness-matrix"><span class="header-section-number">4</span> System (stiffness) matrix</a>
   <ul class="collapse">
   <li><a href="#boundary-conditions" id="toc-boundary-conditions" class="nav-link" data-scroll-target="#boundary-conditions"><span class="header-section-number">4.1</span> Boundary conditions</a></li>
@@ -272,47 +269,34 @@ window.Quarto = {
 <li>[1990] computational improvements</li>
 <li>now main method for almost all PDE types</li>
 </ul>
-<p>Geophysics: Poisson equation in 1970s, revival in 1990s and predominant in 2000s up to now</p>
+<p>In geophysics, solution of Poisson equation with FE became popular in the 1970s, but were very limited in the 1980s, before they experienced a revival in the 1990s. From the 2000s to now they became predominant for a wide range of different problems.</p>
 </section>
 <section id="variational-formulation-of-poisson-equation" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="variational-formulation-of-poisson-equation"><span class="header-section-number">3.2</span> Variational formulation of Poisson equation</h2>
-<p><span class="math display">\[ -\div a \grad u = f \]</span></p>
-<div class="fragment">
-<p>Multiplication with test function <span class="math inline">\(w\)</span> and integration <span class="math inline">\(\Rightarrow\)</span> weak form</p>
+<p>We start with the continuity (Poisson with conductivity) problem: <span class="math display">\[ -\div a \grad u = f \]</span></p>
+<p>The equation is multiplied with a test (weighting) function <span class="math inline">\(w\)</span> and integrated over the whole modelling domain <span class="math inline">\(\Omega\)</span>, leading to weak form</p>
 <p><span class="math display">\[ -\int_\Omega w \div a \grad u \dd\Omega = \int_\Omega w f \dd\Omega \]</span></p>
-</div>
-<div class="fragment">
-<p><span class="math display">\[ \div(b\vb c) = b\div \vb c + \grad b \cdot \vb c \]</span></p>
-</div>
-<div class="fragment">
-<p><span class="math display">\[ \int_\Omega \grad w a \grad u \dd\Omega - \int_\Omega \div(w a \grad u) \dd\Omega = \int_\Omega w f \dd\Omega \]</span></p>
-</div>
+<p>Now we use the vector identity $ (bc) = bc + b c $</p>
+<p>or, rewritten, <span class="math inline">\(-b\div \vb c = \grad b \cdot \vb c - \div(b\vb c)\)</span></p>
+<p>with <span class="math inline">\(b=w\)</span> and <span class="math inline">\(\vb c=\grad u\)</span> to obtain</p>
+<p><span class="math display">\[ \int_\Omega \grad w \vdot a \grad u \dd\Omega - \int_\Omega \div(w a \grad u) \dd\Omega = \int_\Omega w f \dd\Omega \]</span></p>
+<p>We make use of Gauss’ law <span class="math inline">\(\int_\Omega \div \vb A = \int_\Gamma \vb A \cdot \vb n\)</span> to transform the second term into a surface integral, yielding</p>
+<p><span class="math display">\[ \int_\Omega a \grad w \vdot \grad u \dd\Omega - \int_\Gamma a w \grad u \dd\Gamma = \int_\Omega fw \dd\Omega \]</span></p>
+<p>Let our approximation <span class="math inline">\(u_h\)</span> be constructed by a number of shape functions <span class="math inline">\(v_i\)</span> with the coefficients <span class="math inline">\(u_i\)</span>:</p>
+<p><span class="math display">\[u_h(\vb r)=\sum_i u_i v_i(\vb r)\]</span></p>
+<p>This shows an important feature of Finite Elements: it is a function in the whole modelling domain, constructed by basis . We can then satisfy the latter equation</p>
+<p><span class="math display">\[ \sum_i \int_\Omega a \grad w \vdot \grad v_i \dd\Omega - \sum_i \int_\Gamma a w \grad v_i \dd\Gamma = \int_\Omega fw \dd\Omega \]</span></p>
+<p>The <strong>Galerkin method</strong> now consists of the idea to choose the test functions out of the same space as the shape (trial) functions <span class="math inline">\(w_i \in {v_i}\)</span> so that for all <span class="math inline">\(v_j\)</span> holds</p>
+<p><span class="math display">\[ \sum_i u_i \int_\Omega a \grad v_j \vdot \grad v_i \dd\Omega - u_i \int_\Gamma a v_j \grad v_i \dd\Gamma = \int_\Omega f v_j \dd\Omega \]</span></p>
+<p>For every <span class="math inline">\(j\)</span>, this represents an equation for the different coefficients <span class="math inline">\(u_i\)</span>, where the integral is a predefined factor that can be put into a vector that is multiplied with the coefficient vector <span class="math inline">\(\vb u={u_i}\)</span>. Written for all <span class="math inline">\(j\)</span>, this represents a matrix-vector equation</p>
+<p><span class="math display">\[ \vb A \vb u = \vb b \]</span></p>
+<p>with the so-called stiffness matrix <span class="math inline">\(\vb A\)</span>. Although generally all possible functions can be chosen for <span class="math inline">\(v_i\)</span>, mostly we choose them in such a way that <span class="math inline">\(\grad v_i\)</span> is simple to compute and <span class="math inline">\(\grad v_i \vdot \grad v_j\)</span> is zero in most of the subsurface. To this end, we divide subsurface in sub-volumes <span class="math inline">\(\Omega_c\)</span> with constant <span class="math inline">\(a_i\)</span> and <span class="math inline">\(\grad v_i\)</span> being zero outside of the corresponding cell.</p>
+<p>The functions <span class="math inline">\(v_i\)</span> form a so-called function space that spans the solution, whose coefficients only depend on the right-hand side and the given boundary conditions in the middle term.</p>
 </section>
-<section id="variational-formulation-of-poisson-equation-1" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="variational-formulation-of-poisson-equation-1"><span class="header-section-number">3.3</span> Variational formulation of Poisson equation</h2>
-<p><span class="math display">\[ \int_\Omega \grad w a \grad u \dd\Omega - \int_\Omega \div(w a \grad u) \dd\Omega = \int_\Omega w f \dd\Omega \]</span></p>
-<div class="fragment">
-<p>use Gauss’ law <span class="math inline">\(\int_\Omega \div \vb A = \int_\Gamma \vb A \cdot \vb n\)</span></p>
-<p><span class="math display">\[ \int_\Omega a \grad w \grad u \dd\Omega - \int_\Gamma a w \grad u \dd\Gamma = \int_\Omega fw \dd\Omega \]</span></p>
-</div>
-<div class="fragment">
-<p>Let <span class="math inline">\(u\)</span> be constructed by shape functions <span class="math inline">\(v\)</span>: <span class="math inline">\(u=\sum_i u_i v_i\)</span></p>
-<p><span class="math display">\[ \int_\Omega a \grad w \grad v_i \dd\Omega - \int_\Gamma a w \grad v_i \dd\Gamma = \int_\Omega fw \dd\Omega \]</span></p>
-</div>
-</section>
-<section id="galerkins-method" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="galerkins-method"><span class="header-section-number">3.4</span> Galerkins method</h2>
-<p><span class="math display">\[ \int_\Omega a \grad w \grad v_i \dd\Omega - \int_\Gamma a w \grad v_i \dd\Gamma = \int_\Omega fw \dd\Omega \]</span></p>
-<p>Test functions equal shape (trial) functions <span class="math inline">\(w_i=v_i\)</span></p>
-<p><span class="math display">\[ \int_\Omega a \grad v_i \grad v_j \dd\Omega - \int_\Gamma a w \grad v_j \dd\Gamma = \int_\Omega f v_j \dd\Omega \]</span></p>
-<ul>
-<li>choose <span class="math inline">\(v_i\)</span> so that <span class="math inline">\(\grad v_i\)</span> is simple and <span class="math inline">\(\grad v_i \grad v_j\)</span> mostly 0</li>
-<li>divide subsurface in sub-volumes <span class="math inline">\(\Omega_i\)</span> with constant <span class="math inline">\(a_i\)</span> and <span class="math inline">\(\grad v_j\)</span></li>
-</ul>
-</section>
-<section id="hat-functions" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="hat-functions"><span class="header-section-number">3.5</span> Hat functions</h2>
-<div id="c8109bb8" class="cell" data-execution_count="1">
+<section id="hat-functions" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="hat-functions"><span class="header-section-number">3.3</span> Hat functions</h2>
+<p>The simplest choice for the functions are piece-wise linear functions, so that the gradient is constant in every element. In order to achieve a continuous function and a sparse support, such a functions is associated to every node, where the value is 1 and decreases to 0 for the neighboring elements. In 1D these up-and-down functions are looking like a head. Every element is surrounded by two nodes “carrying” a hat.</p>
+<div id="c023ecca" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="fl">1.</span>, <span class="fl">2.1</span>, <span class="fl">3.5</span>, <span class="fl">5.0</span>])</span>
@@ -341,14 +325,27 @@ window.Quarto = {
 </div>
 </div>
 </div>
-</section>
-<section id="gradients-for-hat-functions" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="gradients-for-hat-functions"><span class="header-section-number">3.6</span> Gradients for hat functions</h2>
-<p>Every element is surrounded by two nodes “carrying” a hat.</p>
-<p>The gradients are piece-wise constant <span class="math inline">\(\pm 1/\Delta x_i\)</span></p>
-<p><span class="math display">\[ \Rightarrow \int_\Omega a \grad v_i \grad v_{i+1} \dd\Omega = -\frac{a_i}{\Delta x_i^2} \cdot \Delta x_i = -\frac{a_i}{\Delta x_i}\]</span></p>
-<p><span class="math display">\[ -\int_\Omega a \grad v_i \grad v_i \dd\Omega = \frac{a_{i-1}}{\Delta x_{i-1}^2}\Delta x_{i-1} + \frac{a_i}{\Delta x_i^2}\Delta x_i = \frac{a_{i-1}}{\Delta x_{i-1}} + \frac{a_i}{\Delta x_i} \]</span></p>
+<p>The gradient of such a function is positive left of the node (<span class="math inline">\(1/\Delta x_{i-1}\)</span>) and negative right of it (<span class="math inline">\(-1/\Delta x_i\)</span>), and zero elsewhere. As it is piece-wise constant, the integrals are simple, to the right of the node <span class="math inline">\(i\)</span></p>
+<p><span class="math display">\[ \int_\Omega a \grad v_i \vdot \grad v_{i+1} \dd\Omega = -\frac{a_i}{\Delta x_i^2} \cdot \Delta x_i = -\frac{a_i}{\Delta x_i} = C_i^{\text{right}}\]</span></p>
+<p>and to the left <span class="math display">\[ \int_\Omega a \grad v_i \vdot \grad v_{i-1} \dd\Omega = -\frac{a_{i-1}}{\Delta x_{i-1}^2} \cdot \Delta x_{i-1} = -\frac{a_{i-1}}{\Delta x_{i-1}} = C_i^{\text{left}}\]</span></p>
+<p>The coefficients are called <em>coupling coefficients</em> as they couple the solution between nodes. For the same node <span class="math inline">\(i\)</span>, the integral consists of two parts</p>
+<p><span class="math display">\[ -\int_\Omega a \grad v_i \vdot \grad v_i \dd\Omega = \frac{a_{i-1}}{\Delta x_{i-1}^2}\Delta x_{i-1} + \frac{a_i}{\Delta x_i^2}\Delta x_i = \frac{a_{i-1}}{\Delta x_{i-1}} + \frac{a_i}{\Delta x_i} \]</span></p>
+<p>For all other combinations of nodes (two or more nodes away), the coupling is zero.</p>
 <p><span class="math display">\[ -\int_\Omega a \grad v_i \grad v_{i+2} \dd\Omega = 0 \]</span></p>
+<p>This makes <span class="math inline">\(\vb A\)</span> a sparsely populated matrix, where only neighboring nodes have a matrix element, just like for Finite Differences. Note that for the latter the coupling coeffiecient was <span class="math inline">\(a_i/\Delta x_i^2\)</span>, because the Finite Element method solves an integrated system, it has one power less.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If the spacing <span class="math inline">\(\Delta x\)</span> is 1.0 everywhere, the FD system matrix equals the FE stiffness matrix and the solution is identical (for 1D). If <span class="math inline">\(\Delta x\)</span> is not 1.0 but constant, both sides of the equation are multiplied by it and the solution is still identical.</p>
+</div>
+</div>
 </section>
 <section id="system-stiffness-matrix" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> System (stiffness) matrix</h1>
